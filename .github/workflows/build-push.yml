@@ -20,6 +20,6 @@ jobs:
           
       - name: Build and push
         run: |-
-          cd pipeline1 && docker build -t mayankjha-purdue/mgmt590-mayank:${{ github.sha }} .
-          docker push mayankjha-purdue/mgmt590-mayank:${{ github.sha }} && cd ../
+          cd pipeline1 && docker build -t mj48345/mgmt590-gcs:${{ github.sha }} .
+          docker push mj48345/mgmt590-gcs:${{ github.sha }} && cd ../
 

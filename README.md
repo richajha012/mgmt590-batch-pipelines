@@ -1,1 +1,1 @@
-# mgmt590-batch-pipelines
+# mgmt590-am-batch-pipeline

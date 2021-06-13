@@ -6,7 +6,7 @@ from google.cloud import storage
 from transformers.pipelines import pipeline
 
 # function to read file from input directory
-# answer the questions and write it to output directory
+# answer the questions and write it to output directory and it also adds an aanswer column to the csv
 def question_answer(qa_file):
     #importing the file using pandas library
     #data = pd.read_csv(qa_file)
@@ -49,6 +49,7 @@ def question_answer(qa_file):
     #data["answer"] = answer
     #data.to_csv("/pfs/out/"+"question_answer"+timestamp+".csv", index=False)    
 
+#this function downloads the files from our GCS Bucket
 def downloadFiles():
     logging.debug('Inside Download Files')
 

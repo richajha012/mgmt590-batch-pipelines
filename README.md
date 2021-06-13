@@ -317,7 +317,7 @@ Create it.
 
 Reference it in your pipeline's specification file.
 
-##Create a Secret
+## Create a Secret
 
 The creation of a Secret in Pachyderm requires a JSON configuration file.
 
@@ -326,7 +326,7 @@ A good way to create this file is:
 1. To generate it by calling a dry-run of the kubectl create secret ... --dry-run=client --output=json > myfirstsecret.json command.
 2. Then call pachctl create secret -f myfirstsecret.json.
 
-##Reference a Secret in Pachyderm's specification file¶
+## Reference a Secret in Pachyderm's specification file¶
 
 Now that your secret is created on Pachyderm cluster, you will need to notify your pipeline by updating your pipeline specification file. In Pachyderm, a Secret can be used in many different ways. Below, I'm describing the way we used :
 

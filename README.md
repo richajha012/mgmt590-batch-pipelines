@@ -2,7 +2,7 @@
 
 This repo contains the master solution for Assignment #4 in the Summer 2021 edition of MGMT 590 (Production Scale Data Products) at Purdue University. Specifically, this repo includes code and config for running a Bacth Pipeline using Dockerhub and Pachyderm for question answering using pre-trained models from [Hugging Face Transformers](https://huggingface.co/models).
 
-##Overview 
+## 1.Overview 
 
 ![architecture](./images/K8.png)
 
@@ -15,7 +15,7 @@ Pipeline 2: This pipeline collects the answers in the output repo of Pachyderm a
 This is a REST API integrated with batch pipelining which can answer questions when provided with a context using one of the state-of-the-art models in Natural Language Processing (NLP). Question answering is a task in information retrieval and Natural Language Processing (NLP) that investigates software that can answer questions asked by humans in natural language. In Extractive Question Answering, a context is provided so that the model can refer to it and make predictions on where the answer lies within the passage. It uses “distilled-bert” algorithm to get the answers to all the questions in the uploaded file. But the standout functionality of this API is, all the steps of the question answering process are automated by integrating GitHub, Google cloud, Docker Hub, and Pachyderm. We also used PostgresSQL from google cloud for storing our answering records. We are using our Laptop/Cloud Shell to push our code GitHub which is version controlled and contains the repositories corresponding to our REST API, Web App(These were a part of our assignment 3), additionally which we have included a Batch processing Pipeline Repo. The REST API and Web App are triggered via GitHub actions workflow and build and deployed to Google cloud Run. We also have a Cloud SQL instance of POSTGRES for our CRUD operations on flask and streamlit. There's also a container Registry which contains the images of our build deploys. The GitHub actions workflow for Batch Pipelines builds and deploys to Docker Hub instead of Google cloud. We're using Pachyderm Hub to host Pachyderm and Kubernetes Cluster.
 
 
-##Architeture
+## 2.Architeture
 
 ![architecture](./images/architect.png)
 
@@ -26,7 +26,7 @@ We also have a Cloud SQL instance of POSTGRES for our CRUD operations on flask a
 In our assignment we are going to have a GCS(Google Cloud Storage), which is going to have .csv files stored and these csv will be put in by our REST API by a new route /uploads  allowing a user to upload a CSV file with a column of questions and a column of contexts. This CSV file should be pushed by the REST API into a GCS bucket (where your Pachyderm pipeline will read it in for processing). The new route should return a 200 OK code and a message to the user indicating that it successfully pushed the file to the GCS bucket
 
 
-# Docker Hub
+# 3.Docker Hub
 
 ![DOCKER](./images/docker.jpeg)
 
@@ -58,7 +58,7 @@ for a way to "productionize" them, Pachyderm can make this easy for you.
   is smart enough to only process the new data
   
 
-## Environment variables and scripts that need to be in place 
+## 4.Environment variables and scripts that need to be in place 
 
 
 ```shell 
@@ -124,7 +124,7 @@ secret_template_db.json
 ```
 
 
-# Steps Followed
+# 5.Steps Followed
 
 ## 1. Create a GCS Bucket for Artifact Storage
 
@@ -243,26 +243,26 @@ For example:
 export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"
 ```
 
-## 4.Create Service Accounts/Roles
+## 6.Create Service Accounts/Roles
 
 We then proceed to create a service account the below three user roles as displayed in the image.
 
 ![user](./images/user.png)
 
 
-## 5.Run the file upload REST API Route
+## 7.Run the file upload REST API Route
 
 We then run the file upload REST API route which leads to the uploading of the csv file to the google cloud bucket that we made earlier.A sample request and response is shown below:
 
 ![fileuplolad](./images/fileupload.png)
 
-## 5.Connect to Pachctl
+## 8.Connect to Pachctl
 
 Our next step is to connect to pachctl. The below image tells the step to connect to pachctl.
 
 ![pachctl](./images/pachctl.png)
 
-## 6.Create and Manage Secrets in Pachyderm
+## 9.Create and Manage Secrets in Pachyderm
 
 The next step is to create secrets in pachyderm. Pachyderm uses Kubernetes' Secrets to store and manage sensitive data, such as passwords, OAuth tokens, or ssh keys. You can use any of Kubernetes' types of Secrets that match your use case. Namely, generic (or Opaque), tls, or docker-registry.
 

@@ -1,78 +1,57 @@
-import csv
+import pandas as pd
 import os
+import io
+from io import BytesIO
 import time
 import logging
 from google.cloud import storage
 from transformers.pipelines import pipeline
 
+hg_comp = pipeline('question-answering', model="distilbert-base-uncased-distilled-squad", tokenizer="distilbert-base-uncased-distilled-squad")
+
 # function to read file from input directory
-# answer the questions and write it to output directory and it also adds an aanswer column to the csv
-def question_answer(qa_file):
+# answer the questions and write it to output directory and add an answer column to our csv file
+def question_answer(fileName, data):
     #importing the file using pandas library
-    #data = pd.read_csv(qa_file)
-    final_answer = []
-       
-    hg_comp = pipeline('question-answering', model="distilbert-base-uncased-distilled-squad", tokenizer="distilbert-base-uncased-distilled-squad")
-    answer = []
-    questions = []
-    contexts = []
-    
-    with open(qa_file,'r') as file:
-        print("inside file reading loop")
-        reader = csv.DictReader(file)
-        print("file read complete")
-        print(reader)
-        for row in reader:
-            print("Inside File Row Read loop")
-            print(row)
-            context = row["context"]
-            question = row["question"]
-            answer.append(hg_comp({'question': question, 'context': context})['answer'])
-            questions.append(question)
-            contexts.append(context)
-        final_answer.append(questions)
-        final_answer.append(contexts)
-        final_answer.append(answer)
-        print (final_answer)
-    #for idx, row in data.iterrows():
-    #    context = row['context']
-    #    question = row['question']
-    #    questions.append(question)
-    #    answer.append(hg_comp({'question': question, 'context': context})['answer'])
+    answer_intmd = []
+    df_intmd = pd.DataFrame()
+    df_final = pd.DataFrame()
+    print("file_read")
+    df = pd.read_csv(io.BytesIO(data), encoding = 'utf-8',sep = ',')
+    print("file_aded to intmd")
+    df_intmd = df_intmd.append(df,ignore_index = True)
+    for fileName,row in df.iterrows():
+        context = row['context']
+        question = row['question']
+        answer = hg_comp({'question': question, 'context': context})['answer']
+        answer_intmd.append(answer)
+
+    df_final['context'] = df_intmd['context']
+    df_final['question'] = df_intmd['question']
+    df_final['answer'] = answer_intmd
     timestamp = str(int(time.time()))
-    with open('/pfs/out/'+"question_answer_"+timestamp+".csv",'w') as f:
-        fileWriter = csv.writer(f, delimiter=',')
-        for row in zip(*final_answer):
-            fileWriter.writerow(row)
- 
-    
-    #data["answer"] = answer
-    #data.to_csv("/pfs/out/"+"question_answer"+timestamp+".csv", index=False)    
-
-#this function downloads the files from our GCS Bucket
-def downloadFiles():
-    logging.debug('Inside Download Files')
-
-    # Create this folder locally if not exists
-    try:
-        blobs = bucket.list_blobs()
-        for blob in blobs:
-            blob.download_to_filename('/pfs/question/'+blob.name)
-    except Exception as ex:
-       logging.error("Exception occurred while trying to download files " , ex)
+    print("writing file to location")
+    df_final.to_csv("/pfs/out/question_answer_"+timestamp+".csv", index=False, header=True,  encoding="utf-8")
     
 if __name__ == '__main__':
-    
+
+    bucket_name = os.environ.get('STORAGE_BUCKET')
+    print("bucket_name")
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket('mgmt590-mayank')
+    bucket = storage_client.get_bucket(bucket_name)
     print("Downloading Files")
-    downloadFiles()
+    files = bucket.list_blobs()
     
-    # walk /pfs/question_answer and call question_answer on every file found
-    for dirpath, dirs, files in os.walk("/pfs/question"):
-        for file in files:
-            print("We are looping in the files")
-            print("File Name: "+file)
-            print(os.path.join(dirpath,file))
-            question_answer(os.path.join(dirpath,file))
-    
+    fileList = [file.name for file in files if '.' in file.name]
+    for fileName in fileList:
+        print("Inside the File List Loop")
+        am_blob = bucket.blob(fileName)
+        print("Blob Created")
+        data = am_blob.download_as_string()
+        print("File Downloaded as string")
+        print("Calling the Question Answer Function")
+        question_answer(fileName,data)
+        print("question_answer completed")
+        print("calling delete function")
+        bucket.delete_blob(fileName)
+        print("delete completed")

@@ -10,7 +10,7 @@ import shutil
 
 from psycopg2 import Error
 
-
+#This function inserts our answered questions to the postgresql database
 def insert_records (conn, question, answer, context, model_name):
     #create an sql cursor for execution of sql queries    
     cur = conn.cursor()
@@ -28,6 +28,7 @@ def insert_records (conn, question, answer, context, model_name):
     #return the timestamp of insertion of record in table to show as output
     return timestamp
 
+#This function is there to initiate the database connection
 def create_connection (dbconnect):
     conn = None
     try:

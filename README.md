@@ -2,6 +2,32 @@
 
 This repo contains the master solution for Assignment #4 in the Summer 2021 edition of MGMT 590 (Production Scale Data Products) at Purdue University. Specifically, this repo includes code and config for running a Bacth Pipeline using Dockerhub and Pachyderm for question answering using pre-trained models from [Hugging Face Transformers](https://huggingface.co/models).
 
+## Outline
+
+- Part 1 - Overview 
+
+- Part 2 - Architecture
+
+- Part 3 - Docker Hub
+
+- Part 4 - Pachyderm
+
+- Part 5 - Environment variables and scripts that need to be in place
+
+- Part 6 - Steps Followed
+
+- Part 7 - Create Service Accounts/Roles
+
+- Part 8 - Run the file upload REST API Route
+
+- Part 9 - Connect to Pachctl
+
+- Part 10 - Create and Manage Secrets in Pachyderm
+
+- Part 11 - Running the commands in pachctl
+
+
+
 ## 1.Overview 
 
 ![architecture](./images/K8.png)
@@ -307,7 +333,7 @@ This makes for easy access to your Secret's data in your pipeline's code. For ex
             "key":"host"
          },
 ```
-##6.Running the commands in pachctl
+## 10.Running the commands in pachctl
 
 After connecting the to the pachctl and creating the repo we can list it using ``pchctl list repo``
 

@@ -149,6 +149,24 @@ secret_template_db.json
 
 ```
 
+## DEPENDENCIES:
+
+```python
+
+transformers==4.6.1
+
+flask==2.0.1
+
+pysqlite3
+
+psycopg2-binary
+
+pytest==6.2.2
+
+pandas
+
+google-cloud-storage
+```
 
 # 5.Steps Followed
 

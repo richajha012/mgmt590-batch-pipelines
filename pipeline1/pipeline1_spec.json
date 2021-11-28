@@ -13,7 +13,7 @@
          "export GOOGLE_APPLICATION_CREDENTIALS=/app/creds.json",
          "python /app/question_answer_pd.py"
       ],
-      "image":"mj48345/mgmt590-gcs:96907fc65de16da122a9e8f3545bcccd1907a755",
+      "image":"ricjha/mgmt-21223-gcs:96907fc65de16da122a9e8f3545bcccd1907a755",
       "secrets":[
          {
             "name":"gcsaccess",
